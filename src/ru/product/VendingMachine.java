@@ -10,11 +10,11 @@ import java.util.List;
 3) методы get и set (сначала публичные потом приватные )
  */
 public class VendingMachine {
-    //коллекции которые легко расширяются
+    //List - коллекции которые легко расширяются
     // сосдали ссылку, само объекта не ту
     private List<Product> productList;
 
-    // конструктор метод который сосдает объект текущего класса и прижелаение конст может вызывать другой конст
+    // конструктор метод который создает объект текущего класса и при желании конст может вызывать другой конст
     // в качестве аргумента можем принять ЛИСТ продукта
     // мы сосзаем абстрактный какой-то любой автома (кофе, батончики и т.д)
     public VendingMachine(List<Product> productList) {
@@ -63,4 +63,28 @@ public class VendingMachine {
         }
         return res;
     }
+
+    // поиск товара по температуре и по имени
+    // строки проверяют на равенство спомощью equals()
+    /*
+    if (product.getNamePtoduct().equals(namePtoduct) && product.temperature == temperature )
+    проверять на равенство temperature не можем так как он не в родительском классе
+    Вводим дополнительную проверку
+    if (!(product instanceof HotDrinkProduct))
+
+    проблема с upcast(не явно), нужно провести обратное действие downcast ( явно)
+     */
+    public Product findProduct(String namePtoduct, int temperature) throws IllegalAccessException {
+        for (Product product : productList) {
+            if (!(product instanceof HotDrinkProduct)) // оператор instanceof проверяет что product является переменной этого типа HotDrinkProduct
+                continue;
+            if (product.getNamePtoduct().equals(namePtoduct) &&
+                    ((HotDrinkProduct) product).getTemperature()  == temperature)
+                //      downcast - (HotDrinkProduct) product)
+                return product;
+        }
+        throw new IllegalAccessException("товар не найден ");
+    }
+
 }
+
